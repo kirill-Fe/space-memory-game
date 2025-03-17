@@ -12,20 +12,20 @@
             color: #fff;
             text-align: center;
             margin: 0;
-            overflow: hidden; /* Prevent scrolling */
+            overflow: hidden; 
         }
 
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Vertically center */
+            justify-content: center; 
             min-height: 100vh;
         }
 
         #gameBoard {
             display: grid;
-            grid-template-columns: repeat(4, 100px); /* 4x4 grid */
+            grid-template-columns: repeat(4, 100px); 
             grid-gap: 10px;
             margin-bottom: 20px;
         }
@@ -42,7 +42,7 @@
             font-size: 2em;
             cursor: pointer;
             transition: transform 0.3s ease;
-            transform-style: preserve-3d; /* Enable 3D transforms */
+            transform-style: preserve-3d; 
         }
 
         .card.flipped {
@@ -63,7 +63,7 @@
             cursor: pointer;
             transition: transform 0.3s ease;
              backface-visibility: hidden;
-             /* Hide the back side initially */
+            
              z-index: 1;
         }
 
@@ -82,7 +82,7 @@
             transition: transform 0.3s ease;
             backface-visibility: hidden;
             transform: rotateY(180deg);
-            /* Rotate the front side initially */
+            
              z-index: 2;
         }
 
@@ -107,8 +107,8 @@
         const scoreDisplay = document.getElementById('score');
         const timerDisplay = document.getElementById('timer');
 
-        const icons = ['🚀', '🌌', '🌠', '🛰️', '👽', '🛸', '🌕', '🌟']; // Space-themed icons
-        let cards = [...icons, ...icons]; // Duplicate to create pairs
+        const icons = ['🚀', '🌌', '🌠', '🛰️', '👽', '🛸', '🌕', '🌟']; 
+        let cards = [...icons, ...icons]; 
 
         let flippedCards = [];
         let matchedCards = [];
@@ -117,7 +117,7 @@
         let seconds = 0;
         let gameStarted = false;
 
-        // Shuffle the cards using Fisher-Yates shuffle algorithm
+    
         function shuffleCards() {
             for (let i = cards.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -125,7 +125,7 @@
             }
         }
 
-        // Start the timer
+        
         function startTimer() {
             timerInterval = setInterval(() => {
                 seconds++;
@@ -133,12 +133,11 @@
             }, 1000);
         }
 
-        // Stop the timer
+        
         function stopTimer() {
             clearInterval(timerInterval);
         }
 
-        // Create card elements
         function createCard(icon, index) {
              const card = document.createElement('div');
             card.classList.add('card');
@@ -157,7 +156,7 @@
             return card;
         }
 
-        // Initialize the game board
+        
         function initializeBoard() {
             shuffleCards();
             cards.forEach((icon, index) => {
@@ -182,13 +181,13 @@
             });
         }
 
-        // Flip the card
+        
         function flipCard(card) {
             card.classList.add('flipped');
             flippedCards.push(card);
         }
 
-        // Check if the flipped cards match
+    
         function checkMatch() {
             const [card1, card2] = flippedCards;
             const icon1 = card1.dataset.icon;
