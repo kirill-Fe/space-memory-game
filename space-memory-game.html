@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Memory Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            overflow: hidden; /* Prevent scrolling */
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Vertically center */
+            min-height: 100vh;
+        }
+
+        #gameBoard {
+            display: grid;
+            grid-template-columns: repeat(4, 100px); /* 4x4 grid */
+            grid-gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            width: 100px;
+            height: 100px;
+            background-color: #222;
+            border: 2px solid #555;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            transform-style: preserve-3d; /* Enable 3D transforms */
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-back {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: #222;
+            border: 2px solid #555;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+             backface-visibility: hidden;
+             /* Hide the back side initially */
+             z-index: 1;
+        }
+
+         .card-front {
+            position: absolute;
+             width: 100px;
+            height: 100px;
+            background-color: #555;
+            border: 2px solid #555;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            backface-visibility: hidden;
+            transform: rotateY(180deg);
+            /* Rotate the front side initially */
+             z-index: 2;
+        }
+
+        #score,
+        #timer {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Космическая игра на память</h1>
+        <div id="score">Количество очков: 0</div>
+        <div id="timer">Время: 0</div>
+        <div id="gameBoard">
+            </div>
+    </div>
+    <script>
+         const gameBoard = document.getElementById('gameBoard');
+        const scoreDisplay = document.getElementById('score');
+        const timerDisplay = document.getElementById('timer');
+
+        const icons = ['🚀', '🌌', '🌠', '🛰️', '👽', '🛸', '🌕', '🌟']; // Space-themed icons
+        let cards = [...icons, ...icons]; // Duplicate to create pairs
+
+        let flippedCards = [];
+        let matchedCards = [];
+        let score = 0;
+        let timerInterval;
+        let seconds = 0;
+        let gameStarted = false;
+
+        // Shuffle the cards using Fisher-Yates shuffle algorithm
+        function shuffleCards() {
+            for (let i = cards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cards[i], cards[j]] = [cards[j], cards[i]];
+            }
+        }
+
+        // Start the timer
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                seconds++;
+                timerDisplay.textContent = `Время: ${seconds}`;
+            }, 1000);
+        }
+
+        // Stop the timer
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        // Create card elements
+        function createCard(icon, index) {
+             const card = document.createElement('div');
+            card.classList.add('card');
+            card.dataset.icon = icon;
+            card.dataset.index = index;
+
+             const cardBack = document.createElement('div');
+            cardBack.classList.add('card-back');
+
+             const cardFront = document.createElement('div');
+            cardFront.classList.add('card-front');
+            cardFront.textContent = icon;
+
+            card.appendChild(cardBack);
+            card.appendChild(cardFront);
+            return card;
+        }
+
+        // Initialize the game board
+        function initializeBoard() {
+            shuffleCards();
+            cards.forEach((icon, index) => {
+                const card = createCard(icon, index);
+                gameBoard.appendChild(card);
+
+                 card.addEventListener('click', () => {
+                    if (!gameStarted) {
+                        startTimer();
+                        gameStarted = true;
+                    }
+
+                    if (flippedCards.length < 2 && !card.classList.contains('flipped') && !card.classList.contains(
+                            'matched')) {
+                        flipCard(card);
+
+                        if (flippedCards.length === 2) {
+                            setTimeout(checkMatch, 500);
+                        }
+                    }
+                });
+            });
+        }
+
+        // Flip the card
+        function flipCard(card) {
+            card.classList.add('flipped');
+            flippedCards.push(card);
+        }
+
+        // Check if the flipped cards match
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            const icon1 = card1.dataset.icon;
+            const icon2 = card2.dataset.icon;
+
+            if (icon1 === icon2) {
+                matchedCards.push(card1, card2);
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                score++;
+                scoreDisplay.textContent = `Количество очков: ${score}`;
+
+                if (matchedCards.length === cards.length) {
+                    stopTimer();
+                    alert(`Поздравляю! Ты победил в ${seconds} секунд со счетом ${score}!`);
+                }
+            } else {
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                }, 500);
+            }
+
+            flippedCards = [];
+        }
+
+        initializeBoard();
+    </script>
+</body>
+
+</html>
