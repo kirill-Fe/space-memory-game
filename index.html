@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Space Memory Game</title>
-    <link rel="shortcut icon" href="icon.png" type="image/x-icon">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -13,14 +12,14 @@
             color: #fff;
             text-align: center;
             margin: 0;
-            overflow: hidden; 
+            overflow: hidden; /* Prevent scrolling */
         }
 
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; 
+            justify-content: center; /* Vertically center */
             min-height: 100vh;
         }
 
@@ -43,7 +42,7 @@
             font-size: 2em;
             cursor: pointer;
             transition: transform 0.3s ease;
-            transform-style: preserve-3d; 
+            transform-style: preserve-3d;
         }
 
         .card.flipped {
@@ -64,7 +63,6 @@
             cursor: pointer;
             transition: transform 0.3s ease;
              backface-visibility: hidden;
-            
              z-index: 1;
         }
 
@@ -83,7 +81,6 @@
             transition: transform 0.3s ease;
             backface-visibility: hidden;
             transform: rotateY(180deg);
-            
              z-index: 2;
         }
 
@@ -92,11 +89,32 @@
             font-size: 1.5em;
             margin-bottom: 10px;
         }
+
+        a {
+    display: inline-block;
+    padding: 12px 24px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    background-color: #222; 
+    border: 2px solid #00ffff; 
+    box-shadow: 0 0 10px #00ffff; 
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: #000; 
+    background-color: #00ffff; 
+    box-shadow: 0 0 20px #00ffff; 
+}
     </style>
 </head>
 
 <body>
     <div class="container">
+        <a href="https://kirill-fe.github.io/projects">К     проектам</a>
         <h1>Космическая игра на память</h1>
         <div id="score">Количество очков: 0</div>
         <div id="timer">Время: 0</div>
@@ -118,7 +136,6 @@
         let seconds = 0;
         let gameStarted = false;
 
-    
         function shuffleCards() {
             for (let i = cards.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -126,7 +143,6 @@
             }
         }
 
-        
         function startTimer() {
             timerInterval = setInterval(() => {
                 seconds++;
@@ -134,7 +150,6 @@
             }, 1000);
         }
 
-        
         function stopTimer() {
             clearInterval(timerInterval);
         }
@@ -157,7 +172,6 @@
             return card;
         }
 
-        
         function initializeBoard() {
             shuffleCards();
             cards.forEach((icon, index) => {
@@ -182,13 +196,11 @@
             });
         }
 
-        
         function flipCard(card) {
             card.classList.add('flipped');
             flippedCards.push(card);
         }
 
-    
         function checkMatch() {
             const [card1, card2] = flippedCards;
             const icon1 = card1.dataset.icon;
@@ -203,7 +215,7 @@
 
                 if (matchedCards.length === cards.length) {
                     stopTimer();
-                    alert(`Поздравляю! Ты победил за ${seconds} секунд со счетом ${score}!`);
+                    alert(`Поздравляю! Ты победил в ${seconds} секунд со счетом ${score}!`);
                 }
             } else {
                 setTimeout(() => {
